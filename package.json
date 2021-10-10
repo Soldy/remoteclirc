@@ -1,0 +1,30 @@
+{
+    "name": "remoteclirc",
+    "version": "0.0.1",
+    "description": "config manager",
+    "main": "index.js",
+    "scripts": {
+        "test": "node test.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Soldy/remoteclirc.git"
+    },
+    "keywords": [],
+    "author": "Soldy <npmjs@gidigi.com> (http://gidigi.com)",
+    "license": "GPL-3.0-or-later",
+    "bugs": {
+        "url": "https://github.com/Soldy/remoteclirc/issues"
+    },
+    "homepage": "https://github.com/Soldy/remoteclirc#readme",
+    "devDependencies": {
+        "nanoTest": "0.9.9-beta22"
+    },
+    "dependencies": {
+        "commandrc": "0.0.1",
+        "confrc": "1.0.4",
+        "logrc": "0.0.7",
+        "serialrc": "0.0.3",
+        "theuniverse": "0.2.2"
+    }
+}
