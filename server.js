@@ -6,15 +6,26 @@ const $commandrc = new (require('commandrc')).base();
 
 
 const _remoteCliRc = function(){
-    this.run = function(command){
-        return $commandrc.run(command);
+    this.run = async function(command){
+        return await $commandrc.run(command);
     }
     this.add = function(texts,command,help){
         return $commandrc.add(texts,command,help);
     }
-    this.log = function(log){
+    this.log = async function(log){
+        return await _log(log);
+    }
+    const _log = async function(log){
+        if(
+            (typeof log !== 'string') ||
+            (2 > log.length)
+        )
+            return false;
         for(let i in _connections)
-            _connections[i].write(log);
+            if(typeof _connections[i].write !== 'undefined')
+                await _connections[i].write(log);
+            else
+                delete _connections[i].write;
     }
     let _connections = {};
     const _setup = new $setup({
@@ -39,6 +50,11 @@ const _remoteCliRc = function(){
     const _server = $net.createServer(function(client){
         client.setEncoding('utf-8');
         client.setTimeout(_setup.get('timeout'));
+        client.on('data', async function(data){
+            _log(
+                await $commandrc.run(data)
+            );
+        });
         _connection[_serialrc.get('remoteclirc')] = client;
    }).listen({
        port:_setup.get('port'),
