@@ -5,7 +5,7 @@ const $serialrc = require('serialrc').base;
 const $commandrc = new (require('commandrc')).base();
 
 
-const _remoteCliRc = function(){
+const _remoteCliRc = function(setup_in){
     this.run = async function(command){
         return await $commandrc.run(command);
     }
@@ -28,7 +28,7 @@ const _remoteCliRc = function(){
                 delete _connections[i].write;
     }
     let _connections = {};
-    const _setup = new $setup({
+    const _setup = new $setuprc({
         'timeout' : {
             'type'    : 'integer',
             'min'     : 1000,
@@ -46,6 +46,10 @@ const _remoteCliRc = function(){
             'default' : 'localhost'
         }
     });
+    
+    if(typeof setup_in === 'undefined')
+        for(let i in setup_in)
+            _setup.set(i, setup_in[i]);
 
     const _server = $net.createServer(function(client){
         client.setEncoding('utf-8');
@@ -55,11 +59,11 @@ const _remoteCliRc = function(){
                 await $commandrc.run(data)
             );
         });
-        _connection[_serialrc.get('remoteclirc')] = client;
+        _connections[$serialrc.get('remoteclirc')] = client;
    }).listen({
        port:_setup.get('port'),
        host:_setup.get('host')
    });
 }
 
-exports.base = remoteCliRc;
+exports.base = _remoteCliRc;
